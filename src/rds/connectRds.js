@@ -3,7 +3,7 @@ const DB_SECRET = config.DB_SECRET;
 const mysql = require("mysql");
 
 function fetchData() {
-  const data = "";
+  let data;
   const connection = mysql.createConnection({
     host: "ppsoln-test.c94ybcgjqd5w.ap-northeast-2.rds.amazonaws.com",
     user: "admin",
@@ -11,19 +11,29 @@ function fetchData() {
     database: "test",
   });
 
-  connection.connect(function (err) {
-    if (err) {
-      throw err;
-    } else {
-      connection.query(
-        "SELECT id, name FROM testTable",
-        function (err, rows, field) {
-          data = rows;
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT id, name FROM testTable",
+      function (err, rows, field) {
+        if (err) {
+          throw err;
         }
-      );
-    }
+        resolve(rows);
+      }
+    );
   });
-  return data;
+  // connection.connect(function (err) {
+  //   if (err) {
+  //     throw err;
+  //   } else {
+  //     connection.query(
+  //       "SELECT id, name FROM testTable",
+  //       function (err, rows, field) {
+  //         console.log(rows);
+  //       }
+  //     );
+  //   }
+  // });
 }
 
 module.exports = { fetchData };
